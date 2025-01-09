@@ -53,13 +53,13 @@ bool Application::performCommand(const vector<string> & args)
 
     if (args[0] == "a" || args[0] == "add")
     {
-        if (args.size() != 4)
+        if (args.size() != 6)
         {
-            _out.Output("Некорректное количество аргументов команды add");
+            _out.Output("Некорректное количество аргументов команды add!");
             return false;
         }
 
-        _col.addItem(make_shared<Person>(args[1].c_str(), args[2].c_str(), stoul(args[3])));
+        _col.addItem(make_shared<Performance>(args[1].c_str(), args[2].c_str(), stoul(args[3]), args[4].c_str(), args[5].c_str()));
         return true;
     }
 
@@ -77,13 +77,13 @@ bool Application::performCommand(const vector<string> & args)
 
     if (args[0] == "u" || args[0] == "update")
     {
-        if (args.size() != 5)
+        if (args.size() != 7)
         {
             _out.Output("Некорректное количество аргументов команды update");
             return false;
         }
 
-        _col.updateItem(stoul(args[1]), make_shared<Person>(args[2].c_str(), args[3].c_str(), stoul(args[4])));
+        _col.updateItem(stoul(args[1]), make_shared<Performance>(args[2].c_str(), args[3].c_str(), stoul(args[4]), args[5].c_str(), args[6].c_str()));
         return true;
     }
 
@@ -98,14 +98,16 @@ bool Application::performCommand(const vector<string> & args)
         size_t count = 0;
         for(size_t i=0; i < _col.getSize(); ++i)
         {
-            const Person & item = static_cast<Person &>(*_col.getItem(i));
+            const Performance & item = static_cast<Performance &>(*_col.getItem(i));
 
             if (!_col.isRemoved(i))
             {
                 _out.Output("[" + to_string(i) + "] "
-                        + item.getFirstName() + " "
-                        + item.getLastName() + " "
-                        + to_string(item.getYearOfBirth()));
+                        + item.getGroupName() + " "
+                        + item.getGenre() + " "
+                        + to_string(item.getOrder()) + " "
+                        + item.getTimeStart() + " "
+                        + item.getTimeEnd());
                 count ++;
             }
         }

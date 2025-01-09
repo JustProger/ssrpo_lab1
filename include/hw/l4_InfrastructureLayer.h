@@ -12,6 +12,7 @@ Copyright (c) 2019 МГТУ им. Н.Э. Баумана, кафедра ИУ-6, 
 #include <string>
 #include <vector>
 #include <cassert>
+#include <regex>
 #include <memory>
 
 #include <fstream>

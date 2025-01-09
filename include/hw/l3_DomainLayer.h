@@ -11,32 +11,42 @@ Copyright (c) 2019 МГТУ им. Н.Э. Баумана, кафедра ИУ-6, 
 
 #include "hw/l4_InfrastructureLayer.h"
 
-const size_t MAX_NAME_LENGTH    = 50;
-const size_t MIN_YEAR_OF_BIRTH  = 1900;
-const size_t MAX_YEAR_OF_BIRTH  = 2019;
+const size_t MAX_STRING_LENGTH = 50;
+const size_t TIME_LENGTH = 5;
 
-class Person : public ICollectable
+class Performance : public ICollectable
 {
-    std::string _first_name;
-    std::string _last_name;
-    uint16_t    _year_of_birth;
+
+    std::string _group_name;
+    std::string _genre;
+    uint16_t    _order;
+    std::string _time_start;
+    std::string _time_end;
 
 protected:
     bool invariant() const;
 
 public:
-    Person() = delete;
-    Person(const Person & p) = delete;
+    Performance() = delete;
+    Performance(const Performance & p) = delete;
 
-    Person & operator = (const Person & p) = delete;
+    Performance & operator = (const Performance & p) = delete;
 
-    Person(const std::string & first_name, const std::string & last_name, uint16_t year_of_birth);
+    Performance(
+        const std::string & group_name, 
+        const std::string & genre, 
+        uint16_t            order, 
+        const std::string & time_start, 
+        const std::string & time_end
+    );
 
-    const std::string & getFirstName() const;
-    const std::string & getLastName() const;
-    uint16_t       getYearOfBirth() const;
+    const std::string & getGroupName() const;
+    const std::string & getGenre() const;
+    uint16_t            getOrder() const;
+    const std::string & getTimeStart() const;
+    const std::string & getTimeEnd() const;
 
-    virtual bool   write(std::ostream& os) override;
+    virtual bool        write(std::ostream& os) override;
 };
 
 

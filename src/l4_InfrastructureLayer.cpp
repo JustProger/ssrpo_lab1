@@ -30,7 +30,6 @@ void writeString(ostream& os, const string& s)
     os.write(s.c_str(), len);
 }
 
-
 shared_ptr<ICollectable> ACollector::getItem(size_t index) const
 {
     assert(index < _items.size());

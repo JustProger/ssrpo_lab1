@@ -1,15 +1,26 @@
 #!/bin/bash
 
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[0;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # Без цвета (сброс)
+
+delete_all() {
+    echo -e "${YELLOW}Удаление...${NC}"
+    rm -rf public
+}
+
 # Задача compile
 compile() {
-    echo "Собираем..."
+    echo -e "${GREEN}Собираем...${NC}"
     ./configure
     make
 }
 
 # Задача test
 test_task() {
-    echo "Запускаем тесты..."
+    echo -e "${GREEN}Запускаем тесты...${NC}"
     chmod +x test/test*
     test/make-result
     diff test/test-result.sample test/test-result.out
@@ -17,32 +28,31 @@ test_task() {
 
 # Задача delivery
 delivery() {
-    echo "Готовим релиз..."
+    echo -e "${GREEN}Готовим релиз...${NC}"
     doxygen doc/Doxyfile.cfg
 
-    echo "Прогоняем сборку..."
-    ./configure
-    make
+    delete_all
 
-    echo "Прогоняем тесты..."
-    test/make-result
+    compile
 
-    echo "Строим отчёт покрытия..."
+    test_task
+
+    echo -e "${GREEN}Строим отчёт покрытия...${NC}"
     lcov -t "lab" -o lab.info -c -d . --no-external
     genhtml -o coverage lab.info
 
-    echo "Деплоим..."
+    echo -e "${GREEN}Деплоим...${NC}"
     mv doc/html/ public/
     mv coverage/ public/coverage/
 }
 
 # Главная задача, выполняющая три подзадачи
 all_tasks() {
-    echo "Запуск всех задач последовательно..."
+    echo -e "${YELLOW}Запуск всех задач последовательно...${NC}"
     compile
     test_task
     delivery
-    echo "Все задачи завершены."
+    echo -e "${GREEN}Все задачи завершены.${NC}"
 }
 
 # Проверяем аргументы командной строки

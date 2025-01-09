@@ -5,41 +5,53 @@
 
 using namespace std;
 
-
-bool Person::invariant() const
+bool Performance::invariant() const
 {
-    return _year_of_birth >= MIN_YEAR_OF_BIRTH
-        && _year_of_birth <= MAX_YEAR_OF_BIRTH
-        && !_first_name.empty() && _first_name.size() <= MAX_NAME_LENGTH
-        && !_last_name.empty() && _last_name.size() <= MAX_NAME_LENGTH;
+    regex timeRegex(R"(\d{2}:\d{2})");  
+    return !_group_name.empty() && _group_name.size() <= MAX_STRING_LENGTH
+    && !_genre.empty()  && _genre.size() <= MAX_STRING_LENGTH  
+    && regex_match(_time_start, timeRegex)
+    && regex_match(_time_end, timeRegex);
 }
 
-Person::Person(const std::string & first_name, const std::string & last_name, uint16_t year_of_birth)
-    : _first_name(first_name), _last_name(last_name), _year_of_birth(year_of_birth)
+Performance::Performance(const std::string & group_name, const std::string & genre, uint16_t order, const std::string & time_start, const std::string & time_end)
+    : _group_name(group_name), _genre(genre), _order(order), _time_start(time_start), _time_end(time_end)
 {
     assert(invariant());
 }
 
-const string & Person::getFirstName() const
+const string & Performance::getGroupName() const
 {
-    return _first_name;
+    return _group_name;
 }
 
-const string & Person::getLastName() const
+const string & Performance::getGenre() const
 {
-    return _last_name;
+    return _genre;
 }
 
-uint16_t Person::getYearOfBirth() const
+uint16_t Performance::getOrder() const
 {
-    return _year_of_birth;
+    return _order;
 }
 
-bool   Person::write(ostream& os)
+const string & Performance::getTimeStart() const
 {
-    writeString(os, _first_name);
-    writeString(os, _last_name);
-    writeNumber(os, _year_of_birth);
+    return _time_start;
+}
+
+const string & Performance::getTimeEnd() const
+{
+    return _time_end;
+}
+
+bool   Performance::write(ostream& os)
+{
+    writeString(os, _group_name);
+    writeString(os, _genre);
+    writeNumber(os, _order);
+    writeString(os, _time_start);
+    writeString(os, _time_end);
 
     return os.good();
 }
@@ -48,9 +60,14 @@ bool   Person::write(ostream& os)
 
 shared_ptr<ICollectable> ItemCollector::read(istream& is)
 {
-    string   first_name = readString(is, MAX_NAME_LENGTH);
-    string   last_name  = readString(is, MAX_NAME_LENGTH);
-    uint16_t year       = readNumber<uint16_t>(is);
+    string   group_name = readString(is, MAX_STRING_LENGTH);
+    string   genre  = readString(is, MAX_STRING_LENGTH);
+    uint16_t order = readNumber<uint16_t>(is);
+    string   time_start  = readString(is, TIME_LENGTH);
+    string   time_end  = readString(is, TIME_LENGTH);
 
-    return std::make_shared<Person>(first_name, last_name, year);
+
+    return std::make_shared<Performance>(group_name, genre, order, time_start, time_end);
 }
+
+
