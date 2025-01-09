@@ -6,3 +6,4 @@ doc/html
 *.user
 coverage
 lab.info
+.vscode
